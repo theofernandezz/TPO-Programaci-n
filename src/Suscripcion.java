@@ -9,7 +9,6 @@ public class Suscripcion {
         this.cliente = cliente;
     }
 
-
     public Cliente getCliente() {
         return cliente;
     }
