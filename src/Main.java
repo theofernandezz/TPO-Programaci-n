@@ -123,6 +123,7 @@ public class Main {
     }
 
     private static void agregarProducto() {
+        //TODO: Agregar id que se autoincremente segun la cantidad de items que tiene la lista cafes
         System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
         System.out.print("Precio: ");
@@ -167,6 +168,7 @@ public class Main {
         Cliente nuevoCliente = agregarCliente();
 
         System.out.println("Seleccione el cafe elegido por le cliente:");
+        //TODO: Cambiar para que en vez de buscar por nombre, realize la busqueda por ID
         System.out.println("Lista de Cafes:");
         for (Cafe producto : dashboard.getCafes()) {
             System.out.println(producto.getNombre() + " - " + producto.getPais() + " - $" + producto.getPrecio());
@@ -195,6 +197,6 @@ public class Main {
         for (Suscripcion suscripcion : dashboard.getSuscripciones()) {
             System.out.println(suscripcion.getCliente().getNombre() + " - " + suscripcion.getCafe().getNombre() + " - " + suscripcion.getCantidad() + " gramos.");
         }
-        
+
     }
 }

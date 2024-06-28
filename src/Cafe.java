@@ -1,4 +1,5 @@
 public class Cafe {
+    //TODO: Agregar id al cafe
     private String nombre;
     private double precio;
     private String pais;
