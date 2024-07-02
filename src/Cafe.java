@@ -32,5 +32,13 @@ public class Cafe {
 
     public String getPais() { return pais; }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setPais(String pais) { this.pais = pais; }
 }
