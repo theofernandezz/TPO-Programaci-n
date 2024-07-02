@@ -38,4 +38,8 @@ public class Dashboard {
     public List<Suscripcion> getSuscripciones() {
         return suscripciones;
     }
+
+    public int nextCafeId() {
+        return cafes.size() + 1;
+    }
 }

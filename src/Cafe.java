@@ -3,12 +3,14 @@ public class Cafe {
     private String nombre;
     private double precio;
     private String pais;
+    private int id;
 
     // Constructor
-    public Cafe(String nombre, double precio, String pais) {
+    public Cafe(int id, String nombre, double precio, String pais) {
         this.nombre = nombre;
         this.precio = precio;
         this.pais = pais;
+        this.id = id;
     }
 
     // Getters y Setters

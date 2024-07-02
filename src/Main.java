@@ -1,3 +1,4 @@
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -9,12 +10,12 @@ public class Main {
 
     public static void main(String[] args) {
         //Inicializar clases cafe
-        Cafe colombia = new Cafe("Cauca Tostado", 15000, "Colombia");
-        Cafe brasil = new Cafe("Sur de Minas Gerais", 13500, "Brasil");
-        Cafe guatemala = new Cafe("Huehuetenango", 16000, "Guatemala");
-        Cafe costaRica = new Cafe("Tarrazu", 15000, "Costa Rica");
-        Cafe etiopia = new Cafe("Guji Natural", 17000, "Etiopia");
-        Cafe kenia = new Cafe("Muranga", 18000, "Kenia");
+        Cafe colombia = new Cafe(0, "Cauca Tostado", 15000, "Colombia");
+        Cafe brasil = new Cafe(1, "Sur de Minas Gerais", 13500, "Brasil");
+        Cafe guatemala = new Cafe(2, "Huehuetenango", 16000, "Guatemala");
+        Cafe costaRica = new Cafe(3, "Tarrazu", 15000, "Costa Rica");
+        Cafe etiopia = new Cafe(4, "Guji Natural", 17000, "Etiopia");
+        Cafe kenia = new Cafe(5, "Muranga", 18000, "Kenia");
 
         //Inicializar clase cliente prueba
         Cliente cliente1 = new Cliente("Bruno Nehuen Cicerchia", "cicerchiabruno@gmail.com", "Capilla del señor 420, Campana, Buenos Aires", "+543489562010");
@@ -61,6 +62,8 @@ public class Main {
                     gestionarSuscripciones();
                     break;
                 case 4:
+                    buscarClientes();
+                case 5:
                     salir = true;
                     System.out.println("Saliendo...");
                     break;
@@ -75,7 +78,8 @@ public class Main {
         System.out.println("1. Ver Clientes");
         System.out.println("2. Gestionar Productos");
         System.out.println("3. Gestionar Suscripciones");
-        System.out.println("4. Salir");
+        System.out.println("4. Buscar cliente");
+        System.out.println("5. Salir");
         System.out.print("Seleccione una opción: ");
     }
 
@@ -102,6 +106,21 @@ public class Main {
         }
     }
 
+    private static void buscarClientes() {
+        System.out.println("Ingrese el nombre del cliente:");
+        String nombre = scanner.nextLine();
+        Cliente resultado = dashboard.getClientes().stream()
+                .filter(cliente -> cliente.getNombre().equalsIgnoreCase(nombre))
+                .findFirst()
+                .orElse(null);
+        if(resultado != null) {
+            System.out.println("Client encontrado!");
+            System.out.println("Nombre: " + resultado.getNombre() + " - Telefono: " + resultado.getTelefono());
+        } else {
+            System.out.println("No hay un cliente con ese nombre");
+        }
+    }
+
     private static void gestionarProductos() {
         System.out.println("Gestión de Productos");
         System.out.println("1. Agregar Producto");
@@ -123,15 +142,14 @@ public class Main {
     }
 
     private static void agregarProducto() {
-        //TODO: Agregar id que se autoincremente segun la cantidad de items que tiene la lista cafes
         System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
         System.out.print("Precio: ");
         Double precio = scanner.nextDouble();
-        System.out.print("Precio: ");
+        System.out.print("Pais: ");
         String pais = scanner.nextLine();
-        scanner.nextLine(); // Consumir la nueva línea
-        Cafe productoNuevo = new Cafe(nombre, precio, pais);
+        scanner.nextLine();
+        Cafe productoNuevo = new Cafe(dashboard.nextCafeId(), nombre, precio, pais);
         dashboard.agregarCafes(productoNuevo);
 
         System.out.println("Producto agregado exitosamente.");
@@ -140,7 +158,7 @@ public class Main {
     private static void verProductos() {
         System.out.println("Lista de Productos:");
         for (Cafe producto : dashboard.getCafes()) {
-            System.out.println(producto.getNombre() + " - " + producto.getPais() + " - $" + producto.getPrecio());
+            System.out.println(producto.getId() + ". " + producto.getNombre() + " - " + producto.getPais() + " - $" + producto.getPrecio());
         }
     }
 
@@ -167,29 +185,32 @@ public class Main {
     private static void agregarSuscripcion() {
         Cliente nuevoCliente = agregarCliente();
 
-        System.out.println("Seleccione el cafe elegido por le cliente:");
+        System.out.println("Seleccione el cafe elegido por numero:");
         //TODO: Cambiar para que en vez de buscar por nombre, realize la busqueda por ID
         System.out.println("Lista de Cafes:");
         for (Cafe producto : dashboard.getCafes()) {
-            System.out.println(producto.getNombre() + " - " + producto.getPais() + " - $" + producto.getPrecio());
+            System.out.println(producto.getId() + ". " + producto.getNombre() + " - " + producto.getPais() + " - $" + producto.getPrecio());
         }
-        String nombreProducto = scanner.nextLine();
-        Cafe producto = dashboard.getCafes().stream()
-                .filter(p -> p.getNombre().equals(nombreProducto))
-                .findFirst()
-                .orElse(null);
+        int idProducto = scanner.nextInt();
 
-        if (producto == null) {
+        Optional<Cafe> productoOpt = dashboard.getCafes().stream()
+                .filter(producto -> producto.getId() == idProducto)
+                .findFirst();
+
+        if (!productoOpt.isPresent()) {
             System.out.println("Producto no encontrado. Debe agregar el producto primero.");
             return;
         }
 
+        Cafe cafe = productoOpt.get();
+
         System.out.println("Seleccione la cantidad de cafe mensual");
         Double cantidad = scanner.nextDouble();
-        Suscripcion suscripcion = new Suscripcion(producto,  cantidad, nuevoCliente);
+        Suscripcion suscripcion = new Suscripcion(cafe,  cantidad, nuevoCliente);
         dashboard.agregarSuscripcion(suscripcion);
 
         System.out.println("Suscripción agregada exitosamente.");
+
     }
 
     private static void verSuscripciones() {
